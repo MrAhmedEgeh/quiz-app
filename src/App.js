@@ -1,24 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from "react";
+import './Styles/app.scss';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+
+
+import Nav from "./Components/Nav";
+import Search from "./Components/Search";
+import Types from "./Components/Types";
+
+import ListQuizzes from "./Components/ListQuizzes";
+import Quiz from "./Components/Quiz";
+
 
 function App() {
+  const [sortTypes, setSortTypes] = useState("All"); // for searching the types of quizzes which can be found in Types.js
+  const [quizName, SetQuizName] = useState('');
+  const [currentQuestions, setCurrentQuestions] = useState([]);
+  const [question, setQuestion] = useState({});
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Nav />
+      <Routes>
+        <Route path="/" element={
+          <>
+         <Search setSortTypes={setSortTypes}/>
+         <Types sortTypes={sortTypes}/>
+         </>
+         } 
+        />
+        {/**LIST THE ROUTES: LOGIN, LIST TYPES, QUIZ*/}
+        <Route path="/quizzes/:category" element={
+        <>
+        <Search setSortTypes={setSortTypes}/>
+        <ListQuizzes
+        sortTypes={sortTypes} 
+        setCurrentQuestions={setCurrentQuestions}
+        setQuestion={setQuestion}
+        SetQuizName={SetQuizName}/>
+        </>
+        }/>
+        <Route path="/quiz" 
+        element={
+        <Quiz 
+        question={question}
+        setQuestion={setQuestion}
+        currentQuestions={currentQuestions}
+        setCurrentQuestions={setCurrentQuestions}
+        quizName={quizName}
+        />}
+        />
+      </Routes>
+    </Router>
   );
 }
 

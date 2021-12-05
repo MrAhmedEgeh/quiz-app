@@ -1,0 +1,91 @@
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  background-color: #f3f3f3;
+  border-radius: 20px;
+  overflow: hidden;
+  .imageContainer {
+    height: 250px;
+    width: 250px;
+
+    img {
+      height: 100%;
+      width: 100%;
+      border-radius: 20px;
+    }
+  }
+
+  .content {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+    h5 {
+      color: #777;
+    }
+    .secondRow {
+      margin-top: 15px;
+      .diff {
+        margin-left: 20px;
+      }
+      .bold {
+        font-weight: bold;
+      }
+    }
+    p {
+      max-width: 630px;
+      padding-bottom: 10px;
+    }
+    .author {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      .con {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+      .authorImage {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+      }
+      .authorName {
+        margin-left: 10px;
+      }
+      .takequiz {
+        padding: 10px 20px;
+        outline: 0;
+        border: 0;
+        background-color: #448570;
+        color: #fff;
+        border-radius: 10px;
+        margin-right: 20px;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .quiz {
+    flex-direction: column;
+    .imageContainer {
+      width: 90%;
+      margin-top: 10px;
+      align-self: center;
+    }
+  }
+}
