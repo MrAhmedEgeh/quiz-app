@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { NavLink, useParams} from 'react-router-dom';
+import { NavLink, useParams, Navigate} from 'react-router-dom';
 import data from "../data";
 
 const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName}) => {
@@ -19,7 +19,6 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
         setQuestion(data[parentId].quizzes[quizId].questions[0]);
         SetQuizName(data[parentId].name);
     }
-    
     return(
         <div className="quiz-container">
             {data.map((element, i) => (

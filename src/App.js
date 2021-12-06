@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './Styles/app.scss';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 
 
 import Nav from "./Components/Nav";
@@ -9,7 +9,7 @@ import Types from "./Components/Types";
 
 import ListQuizzes from "./Components/ListQuizzes";
 import Quiz from "./Components/Quiz";
-
+import NotFound from "./Components/NotFound";
 
 function App() {
   const [sortTypes, setSortTypes] = useState("All"); // for searching the types of quizzes which can be found in Types.js
@@ -49,6 +49,7 @@ function App() {
         quizName={quizName}
         />}
         />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Router>
   );
