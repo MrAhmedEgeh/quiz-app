@@ -1,0 +1,88 @@
+.login {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  /*
+  background: rgb(20, 115, 53);
+  background: radial-gradient(
+    circle,
+    rgba(20, 115, 53, 1) 0%,
+    rgba(110, 10, 59, 1) 66%,
+    rgba(0, 0, 0, 1) 100%
+  );*/
+  background-image: url("../Assets/student.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 88vh;
+
+  .logincon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(74, 74, 74, 0.9);
+    padding: 20px;
+    margin: 10px;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 20px;
+    .header {
+      h3 {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 30px;
+        font-size: 29px;
+      }
+      h5 {
+        color: #9b9999;
+        font-size: 16px;
+      }
+    }
+    input {
+      padding: 5px 10px;
+      border-radius: 10px;
+      outline: 0;
+      border-width: 0;
+    }
+
+    .remember {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: #fff;
+      input {
+        margin: 15px;
+      }
+      label {
+        cursor: pointer;
+      }
+    }
+    .errors > div {
+      height: 20px;
+      color: red;
+    }
+    .navlink-login {
+      color: #fff;
+    }
+    .submit {
+      input {
+        border-radius: 0px;
+        background-color: #41816c;
+        color: #fff;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .height50 {
+    height: 50vh;
+  }
+  .height55 {
+    height: 55vh;
+  }
+  .marginTop20 {
+    margin-top: 20px;
+  }
+}

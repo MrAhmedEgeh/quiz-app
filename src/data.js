@@ -1,28 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
-
-import nature from "./Assets/nature.jpg";
-import technology from "./Assets/technology.jpg";
-import history from "./Assets/History.jpg";
-import geography from "./Assets/geography.jpg";
-import arts from "./Assets/arts.jpg";
-import software from "./Assets/software.png";
-import movies from "./Assets/movies.jpg";
-import sport from "./Assets/sports.jpg";
-
-// QUIZZES
-import trees from "./Assets/trees.jpg";
-import web from "./Assets/web.jpeg";
-import england from "./Assets/england.jpg";
-import europe from "./Assets/europe.jpg";
-import italia from "./Assets/italia.jpg";
-import csharp from "./Assets/csharp.png";
-import actor from "./Assets/actor.jpg";
-import liverpool from "./Assets/liverpool.jpg";
 
 
-import author from "./Assets/author.jpg";
-
-
+export default []
+/*
 export default [
     {
         "id": 0,
@@ -1317,3 +1296,4 @@ export default [
         ]
     },
 ]
+*/

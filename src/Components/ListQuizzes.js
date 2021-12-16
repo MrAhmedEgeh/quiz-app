@@ -15,9 +15,14 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
     }, [])
 
     const idLogger = (parentId, quizId) => {
-        setCurrentQuestions(data[parentId].quizzes[quizId].questions);
-        setQuestion(data[parentId].quizzes[quizId].questions[0]);
-        SetQuizName(data[parentId].name);
+
+       let myparent = data.map((el) => el.id === parentId ? (el) : '')
+       myparent = myparent.filter((el) => el !== '')
+       
+       setCurrentQuestions(myparent[0].quizzes[quizId].questions);
+       setQuestion(myparent[0].quizzes[quizId].questions[0]);
+       SetQuizName(myparent[0].name);
+       
     }
     return(
         <div className="quiz-container">
@@ -48,9 +53,11 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
                         <img className="authorImage" src={quiz.Author.image} alt="author image" />
                         <span className="authorName">{quiz.Author.name}</span>
                         </div>
+                       
                         <NavLink to='/quiz'>
                         <button className="takequiz" onClick={() => idLogger(element.id, quiz.id)}>Take Quiz</button>
                         </NavLink>
+         
                         </div>
                         </div>
                     </div> 
