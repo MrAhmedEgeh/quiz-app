@@ -1,0 +1,45 @@
+.dashboard {
+  .firstline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 80px;
+  }
+  .action-btn {
+    color: #fff;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    border-width: 0;
+    outline: 0;
+    font-size: 18px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .margin-top60 {
+    margin-top: 60px;
+  }
+  .bg-blue {
+    background-color: #007bff;
+  }
+  .bg-red {
+    background-color: #dc3545;
+  }
+  .bg-gray {
+    background-color: #6c757d;
+  }
+  .btn-lightblue {
+    background-color: #17a2b8;
+  }
+  .font-14 {
+    font-size: 14px;
+  }
+  .btns {
+    & > button {
+      margin-right: 5px;
+    }
+  }
+}

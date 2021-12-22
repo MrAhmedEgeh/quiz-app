@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { NavLink, useNavigate  } from "react-router-dom";
+import { NavLink, useNavigate, Navigate  } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"
 
 const Login = () => {
@@ -8,7 +8,7 @@ const Login = () => {
     const passwordRef = useRef(null);
     const checkboxRef = useRef(null);
     const navigate = useNavigate()
-    const { login } = useAuth()
+    const { login, currentUser } = useAuth()
 
     // useStates
     const [errorMessage, SetErrorMessage] = useState('');
@@ -30,6 +30,9 @@ const Login = () => {
             }
         }
     }
+    if(currentUser !== null){
+        return <Navigate from="/login" to="/" />
+     }
     return ( 
         <div className="login">
             <div className="logincon height50">
@@ -38,7 +41,13 @@ const Login = () => {
                 <h5>"Add Your Own Quizzes"</h5>
                 </div>
                 <div className="errors">
-                    <div>{errorMessage}</div>
+                    {
+                        errorMessage !== '' ?
+                        (
+                            <div>{errorMessage}</div>
+                        ): 
+                        ('')
+                    }
                 </div>
                 <div className="email">
                     <input type="email" placeholder="Email" ref={emailRef}/>

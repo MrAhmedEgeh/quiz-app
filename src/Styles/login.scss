@@ -3,14 +3,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  /*
-  background: rgb(20, 115, 53);
-  background: radial-gradient(
-    circle,
-    rgba(20, 115, 53, 1) 0%,
-    rgba(110, 10, 59, 1) 66%,
-    rgba(0, 0, 0, 1) 100%
-  );*/
   background-image: url("../Assets/student.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -27,6 +19,9 @@
     width: 100%;
     max-width: 560px;
     border-radius: 20px;
+    & > div:not(.header):not(.errors):not(.submit):not(.register) {
+      width: 40%;
+    }
     .header {
       h3 {
         text-align: center;
@@ -44,6 +39,7 @@
       border-radius: 10px;
       outline: 0;
       border-width: 0;
+      width: 100%;
     }
 
     .remember {
@@ -59,8 +55,11 @@
       }
     }
     .errors > div {
-      height: 20px;
-      color: red;
+      background-color: red;
+      color: #fff;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      border-radius: 10px;
     }
     .navlink-login {
       color: #fff;
@@ -77,7 +76,7 @@
     }
   }
   .height50 {
-    height: 50vh;
+    height: 70vh;
   }
   .height55 {
     height: 55vh;

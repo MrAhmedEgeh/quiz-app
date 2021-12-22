@@ -24,7 +24,18 @@ const Nav = () => {
                 (
                     <div className="avatar" onClick={() => setShowMenu(!showMenu)}>
                      <FontAwesomeIcon className="skip-back" size="2x" icon={faUserCircle}/>
-                     <div className="">Hi Ahmed!</div>
+                     <div className="">
+                     {
+                         currentUser.displayName !== null ?
+                         (
+                            "Hi "+currentUser.displayName.split(' ')[0]+'!'
+                         )
+                         :
+                         (
+                            "Hi User!"
+                         )
+                     }
+                     </div>
                     </div>
                 )
             }
