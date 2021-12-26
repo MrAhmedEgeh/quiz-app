@@ -55,7 +55,7 @@ function App() {
       <AuthProvider>
       <Router>
         <Nav />
-        <div class="lds-dual-ring"></div>
+        <div className="lds-dual-ring"></div>
       </Router>
       </AuthProvider>
     )

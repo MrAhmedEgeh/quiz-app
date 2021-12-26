@@ -1,4 +1,6 @@
 .dashboard {
+  position: relative;
+  overflow: auto;
   .firstline {
     display: flex;
     flex-direction: row;
@@ -22,6 +24,18 @@
   .margin-top60 {
     margin-top: 60px;
   }
+  .margin-top30 {
+    margin-top: 30px;
+  }
+  .margin-top15 {
+    margin-top: 15px;
+  }
+  .margin-bottom30 {
+    margin-bottom: 30px;
+  }
+  .padding-left-1rem {
+    padding-left: 1rem;
+  }
   .bg-blue {
     background-color: #007bff;
   }
@@ -40,6 +54,40 @@
   .btns {
     & > button {
       margin-right: 5px;
+    }
+  }
+
+  .add-quiz {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+  .upload-image {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    position: relative;
+    margin-top: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  .addQuiz-action-btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 50px 0px;
+  }
+  .question-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .minusIcon {
+    margin-right: 1rem;
+    color: #6c757d;
+    &:hover {
+      cursor: pointer;
     }
   }
 }
