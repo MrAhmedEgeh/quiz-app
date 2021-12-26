@@ -22,6 +22,7 @@ const Dashboard = () => {
     const [addQuizBool, setAddQuizBool] = useState(false);
     const [show, setShow] = useState(false);  // for dialog bootstrap
     const [imageUrl, setImageUrl] = useState(''); // using image URL as an id
+    const [errors, setErrors] = useState('');
     const [quizToAdd, setQuizToAdd] = useState(
         {
             "id": uuidv4(),
@@ -200,6 +201,41 @@ const Dashboard = () => {
                     : 
                     ({...el}))})
     }
+    const onChangeImage = (e) => {
+        setQuizToAdd({...quizToAdd, "Image": e.target.value})
+    }
+    const validateQuizToAdd = () => {
+        const isEmpty = Object.values(quizToAdd).every(x => x !== '');
+        if(isEmpty){
+            return true;
+        }else{
+            setErrors('All Fields are Required')
+            window.scrollTo(0,0);
+        }
+    }
+    const validateQuestions = () => {
+        const isEmpty = quizToAdd.questions.map(el => Object.values(el).every(x => x.Question !== ''))
+        if(isEmpty){
+            return true;
+        }else{
+            setErrors('All Fields are Required')
+            window.scrollTo(0,0);
+        }
+    }
+    const validateAnswers = () => {
+        return true;
+    }
+    const uploadImageToFirebaseStorage = () => {
+
+    }
+    const uploadNewQuiz = () => {
+
+    }
+    const addQuizToFirebase = () =>{
+        if(validateQuizToAdd() && validateQuestions() && validateAnswers()){
+            setErrors('')
+        }
+    }
     return ( 
         <div className="dashboard">
         <div className="firstline">
@@ -288,6 +324,16 @@ const Dashboard = () => {
             (
             <div className="add-quiz">
                 {
+                    errors !== '' ?
+                    (
+                    <div className="alert alert-danger" role="alert">
+                    {errors}
+                    </div>
+                    )
+                    :
+                    ''
+                }
+                {
                     [quizToAdd].map(el => (
                         <form>
                         <div className="row">
@@ -333,7 +379,12 @@ const Dashboard = () => {
                         </div>
                         {/**CHOOSE IMAGE FILE FOR QUIZ IMAGE */}
                         <div className="row upload-image">
-                            <input type="file" className="custom-file-input" id="customFile" />
+                            <input 
+                             type="file" 
+                             className="custom-file-input" 
+                             id="customFile" 
+                             onChange={onChangeImage}
+                             value={quizToAdd.Image}/>
                             <label className="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         {/**TEXT AREA */}
@@ -429,7 +480,7 @@ const Dashboard = () => {
                                     <button type="button" className="btn btn-primary" onClick={addQuizHandler}>Add Questions</button>
                                 </div>
                                 <div className="Submit-BTN">
-                                    <button type="button" className="btn btn-success">Submit</button>
+                                    <button type="button" className="btn btn-success" onClick={addQuizToFirebase}>Submit</button>
                                 </div>
                             </div>
                         </form>
