@@ -26,10 +26,11 @@ const Dashboard = () => {
         {
             "id": uuidv4(),
             "Image": "",
+            "Category": "nature",
              "Name": "",
-             "Difficulty": "",
+             "Difficulty": "Easy",
              "Author": {
-                      "name" : "", 
+                      "name" : currentUser === null ? ('') : (currentUser.displayName), 
               },
              "description": "",
              "questions": [
@@ -148,10 +149,56 @@ const Dashboard = () => {
            },]})
     }
     const deleteQuizHandler = (e) => {
-
-    let id = e.target.id;
+    let id = e.target.parentNode.parentNode.dataset.id;
     setQuizToAdd({...quizToAdd, "questions": quizToAdd.questions.filter((el) => el.id !== id)})
 
+    }
+    const onChangeQuizName = (e) => {
+        setQuizToAdd({...quizToAdd, "Name": e.target.value})
+    }
+    const onChangeQuizType = (e) =>{
+        setQuizToAdd({...quizToAdd, "Category": e.target.value})
+    }
+    const onChangeQuizDiffeculty = (e) =>{
+        setQuizToAdd({...quizToAdd, "Difficulty": e.target.value})
+    }
+    const onChangeDescription = (e) => {
+        setQuizToAdd({...quizToAdd, "description": e.target.value})
+    }
+    const onChangeTrueAnswer = (e) => {
+        let answerArrayElement = parseInt(e.target.parentNode.parentNode.id);
+        let questionID = e.target.parentNode.parentNode.parentNode.id;
+        let value = e.target.value;
+        if(value === 'Correct Answer'){
+            setQuizToAdd(
+                {...quizToAdd, 
+                    "questions": quizToAdd.questions.map(el => el.id === questionID ? 
+                        ({...el, 
+                            "Answers": el.Answers.map((element, i) => i === answerArrayElement ? ({...element, "isCorrect": true}) : ({...element, "isCorrect": false}))
+                        }) 
+                        : 
+                        ({...el}))})
+        }
+       
+
+    }
+    const onChangeQuestion = (e) => {
+        let questionID = e.target.parentNode.id;
+        let value = e.target.value;
+        setQuizToAdd({...quizToAdd, "questions": quizToAdd.questions.map(question => question.id === questionID ? ({...question, "Question": value}) : ({...question}))})
+    }
+    const onChangeAnswerInput = (e) => {
+        let answerArrayElement = parseInt(e.target.parentNode.parentNode.id);
+        let questionID = e.target.parentNode.parentNode.parentNode.id;
+        let value = e.target.value;
+        setQuizToAdd(
+            {...quizToAdd, 
+                "questions": quizToAdd.questions.map(el => el.id === questionID ? 
+                    ({...el, 
+                        "Answers": el.Answers.map((element, i) => i === answerArrayElement ? ({...element, "answer": value}) : ({...element}))
+                    }) 
+                    : 
+                    ({...el}))})
     }
     return ( 
         <div className="dashboard">
@@ -246,11 +293,21 @@ const Dashboard = () => {
                         <div className="row">
                             {/**QUIZ NAME */}
                             <div className="col">
-                                <input type="text" className="form-control" placeholder="Quiz Name" />
+                                <input 
+                                 type="text" 
+                                 className="form-control" 
+                                 placeholder="Quiz Name" 
+                                 value={quizToAdd.Name}
+                                 onChange={onChangeQuizName}
+                                 />
                             </div>
                             {/**CATEGORY  */}
                             <div className="col">
-                                <select className="form-control" style={{"appearance": "auto", "height": "37.6px"}}>
+                                <select 
+                                  className="form-control" 
+                                  style={{"appearance": "auto", "height": "37.6px"}}
+                                  onChange={onChangeQuizType}
+                                  >
                                     <option>Nature</option>
                                     <option>Technology</option>
                                     <option>History</option>
@@ -263,7 +320,11 @@ const Dashboard = () => {
                             </div>
                             {/**DIFFECULTIY OF QUIZ */}
                             <div className="col">
-                                <select className="form-control" style={{"appearance": "auto", "height": "37.6px"}}>
+                                <select 
+                                 className="form-control" 
+                                 style={{"appearance": "auto", "height": "37.6px"}}
+                                 onChange={onChangeQuizDiffeculty}
+                                 >
                                     <option>Easy</option>
                                     <option>Moderate</option>
                                     <option>Hard</option>
@@ -277,7 +338,14 @@ const Dashboard = () => {
                         </div>
                         {/**TEXT AREA */}
                         <div className="row upload-image">
-                            <textarea className="form-control" id="exampleFormControlTextarea1" placeholder='Quiz Description' rows="3"></textarea>
+                            <textarea 
+                             className="form-control" 
+                             id="exampleFormControlTextarea1" 
+                             placeholder='Quiz Description' 
+                             rows="3"
+                             value={quizToAdd.description}
+                             onChange={onChangeDescription}
+                             ></textarea>
                         </div>
                         <div className="questions">
                           <h3 className="margin-top30 margin-bottom30">Questions</h3>
@@ -285,35 +353,48 @@ const Dashboard = () => {
              
                 <div className="quizQuestions" key={i}>
                    
-                    <div class="card margin-top30" key={ques.id}>
+                    <div class="card margin-top30" key={ques.id} data-id={ques.id}>
                         <div className="question-header">
                         <h4 className="margin-top15 padding-left-1rem">Question {i+1}</h4>
                         {
                             i >= 4 ?
                             (
                                 <FontAwesomeIcon
-                                id={ques.id}
                                    className='margin-top15 minusIcon'
                                    size="2x" 
                                    icon={faMinusCircle}
-                                   onClick={(e) => deleteQuizHandler(e)}
+                                   onClick={deleteQuizHandler}
                                    />
                             )
                             :
                             ('')
                         }
                         </div>
-                        <div className="card-body">
+                        <div className="card-body" id={ques.id}>
                      
-                            <input type="text" className="form-control" placeholder="Question" />
+                            <input 
+                             type="text" 
+                             className="form-control" 
+                             value={ques.Question} 
+                             placeholder="Question" 
+                             onChange={onChangeQuestion}
+                             />
                             <h4 className='margin-top15'>Answers</h4>
-                            {ques.Answers.map((ans) => (
-                                <div className="row margin-top15">
+                            {ques.Answers.map((ans, i) => (
+                                <div className="row margin-top15" id={i}>
                                 <div className="col">
-                                <input type="text" className="form-control" placeholder="Answer" />
+                                <input type="text"  
+                                  onChange={onChangeAnswerInput} 
+                                  className="form-control" 
+                                  placeholder="Answer" 
+                                  value={ans.answer}
+                                  />
                             </div>
                             <div className="col">
-                            <select className="form-control" style={{"appearance": "auto", "height": "37.6px"}}>
+                            <select className="form-control" 
+                                    style={{"appearance": "auto", "height": "37.6px"}}
+                                    onChange={onChangeTrueAnswer}
+                                    >
                                     {
                                         ans.isCorrect === true ? 
                                         (
