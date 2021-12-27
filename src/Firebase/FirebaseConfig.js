@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
+import { getStorage, ref } from "firebase/storage";
+
 //import { collection, getDocs } from "firebase/firestore"; 
 import {
     collection,
@@ -32,7 +34,7 @@ const firebaseApp = initializeApp({
 
 const db = getFirestore();
 const auth = getAuth();
-
+const storage = getStorage(firebaseApp);
 
 let querySnapshot;
 
@@ -54,5 +56,5 @@ const updateCategories = async () => {
 */
 
 //export default readData;
-export {db, auth};
+export {db, auth, storage};
 

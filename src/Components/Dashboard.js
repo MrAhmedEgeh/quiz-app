@@ -7,12 +7,14 @@ import { v4 as uuidv4 } from "uuid";
 import {
     collection,
     getDocs,
+    getDoc,
     addDoc,
     updateDoc,
     deleteDoc,
     doc,
   } from "firebase/firestore";
-  import {db} from '../Firebase/FirebaseConfig'
+  import {db, storage} from '../Firebase/FirebaseConfig'
+  import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
   import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faUserCircle, faMinusCircle} from '@fortawesome/free-solid-svg-icons';
 const Dashboard = () => {
@@ -26,7 +28,7 @@ const Dashboard = () => {
     const [quizToAdd, setQuizToAdd] = useState(
         {
             "id": uuidv4(),
-            "Image": "",
+            "Image": "url",
             "Category": "nature",
              "Name": "",
              "Difficulty": "Easy",
@@ -88,11 +90,14 @@ const Dashboard = () => {
     )
     let temp = [];
     let toBeDeleted = []
+    let quizImage;
+    let addquiz = [];
+    let category = {};
     useEffect(() => {
         const readData = async () => {
           let querySnapshot = await getDocs(collection(db, "quiz-data"));
           querySnapshot.forEach((doc) => {
-            doc.data().quizzes.map((el) => el.Author.name === 'John Snow' ? temp.push(el) : '')
+            doc.data().quizzes.map((el) => el.Author.name === currentUser.displayName ? temp.push(el) : '')
           })
             setLoading(false);
             setMyQuizzes(temp)
@@ -149,7 +154,7 @@ const Dashboard = () => {
             
            },]})
     }
-    const deleteQuizHandler = (e) => {
+    const deleteQuestionHandler = (e) => {
     let id = e.target.parentNode.parentNode.dataset.id;
     setQuizToAdd({...quizToAdd, "questions": quizToAdd.questions.filter((el) => el.id !== id)})
 
@@ -202,7 +207,8 @@ const Dashboard = () => {
                     ({...el}))})
     }
     const onChangeImage = (e) => {
-        setQuizToAdd({...quizToAdd, "Image": e.target.value})
+        quizImage = e.target.files[0];
+        console.log(e.target.files[0])
     }
     const validateQuizToAdd = () => {
         const isEmpty = Object.values(quizToAdd).every(x => x !== '');
@@ -218,22 +224,66 @@ const Dashboard = () => {
         if(isEmpty){
             return true;
         }else{
-            setErrors('All Fields are Required')
+            setErrors('All Question Fields are Required')
             window.scrollTo(0,0);
         }
     }
     const validateAnswers = () => {
-        return true;
+        let result = quizToAdd.questions.map(el => el.Answers.map(ans => Object.values(ans).every(x => x !== '')))
+        result = result.map(el => el.every((el) => el === true));
+        result = result.every((el) => el === true);
+        if(result){
+            return true;
+        }else{
+            setErrors('All Answer Fields are Required')
+            window.scrollTo(0,0);
+        }
     }
-    const uploadImageToFirebaseStorage = () => {
+
+    const uploadNewQuiz = async() => {
+        const docRef = doc(db, "quiz-data", quizToAdd.Category);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            category = docSnap.data()
+            addquiz = [...docSnap.data().quizzes]
+            addquiz.push(quizToAdd)
+            category = {...category, "quizzes": addquiz};
+            const userDoc = doc(db, "quiz-data",quizToAdd.Category);
+            const newFields = category;
+            await updateDoc(userDoc, newFields).then(() => setAddQuizBool(false))
+        }
 
     }
-    const uploadNewQuiz = () => {
+    const uploadImageToStorage = () => {
 
-    }
-    const addQuizToFirebase = () =>{
-        if(validateQuizToAdd() && validateQuestions() && validateAnswers()){
+        const sotrageRef = ref(storage, `files/${quizImage.name}`);
+        const uploadTask = uploadBytesResumable(sotrageRef, quizImage);
+    
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const prog = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+             
+            },
+            (error) => console.log(error),
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setQuizToAdd({...quizToAdd, "Image": downloadURL})
+            
+              });
+            }
+          );
+      };
+      const addQuizToFirebase = () =>{
+        if(validateAnswers() && validateQuestions() && validateQuizToAdd()){
             setErrors('')
+            uploadImageToStorage();
+            uploadNewQuiz();
+            
+
         }
     }
     return ( 
@@ -354,7 +404,7 @@ const Dashboard = () => {
                                   style={{"appearance": "auto", "height": "37.6px"}}
                                   onChange={onChangeQuizType}
                                   >
-                                    <option>Nature</option>
+                                    <option>nature</option>
                                     <option>Technology</option>
                                     <option>History</option>
                                     <option>Geography</option>
@@ -383,8 +433,7 @@ const Dashboard = () => {
                              type="file" 
                              className="custom-file-input" 
                              id="customFile" 
-                             onChange={onChangeImage}
-                             value={quizToAdd.Image}/>
+                             onChange={onChangeImage}/>
                             <label className="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         {/**TEXT AREA */}
@@ -414,7 +463,7 @@ const Dashboard = () => {
                                    className='margin-top15 minusIcon'
                                    size="2x" 
                                    icon={faMinusCircle}
-                                   onClick={deleteQuizHandler}
+                                   onClick={deleteQuestionHandler}
                                    />
                             )
                             :

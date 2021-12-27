@@ -17,12 +17,22 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
 
     const idLogger = (parentId, quizId) => {
 
-       let myparent = data.map((el) => el.id === parentId ? (el) : '')
-       myparent = myparent.filter((el) => el !== '')
-       
-       setCurrentQuestions(myparent[0].quizzes[quizId].questions);
-       setQuestion(myparent[0].quizzes[quizId].questions[0]);
-       SetQuizName(myparent[0].name);
+      if(isNaN(quizId)){
+        let indexOfParent = data.findIndex(x => x.id === parentId);
+        let indexOfQuiz = data[indexOfParent].quizzes.findIndex(x => x.id === quizId);
+
+        setCurrentQuestions(data[indexOfParent].quizzes[indexOfQuiz].questions);
+        setQuestion(data[indexOfParent].quizzes[indexOfQuiz].questions[0]);
+        SetQuizName(data[indexOfParent].name);
+      }else{
+        let myparent = data.map((el) => el.id === parentId ? (el) : '')
+        myparent = myparent.filter((el) => el !== '')
+        
+        setCurrentQuestions(myparent[0].quizzes[quizId].questions);
+        setQuestion(myparent[0].quizzes[quizId].questions[0]);
+        SetQuizName(myparent[0].name);
+      }
+     
        
     }
     return(
