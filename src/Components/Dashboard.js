@@ -25,6 +25,8 @@ const Dashboard = () => {
     const [show, setShow] = useState(false);  // for dialog bootstrap
     const [imageUrl, setImageUrl] = useState(''); // using image URL as an id
     const [errors, setErrors] = useState('');
+    const [updateQuizBool, setUpdateQuizBool] = useState(false);
+    const [quizToAddImage, setQuizToAddImage] = useState({});
     const [quizToAdd, setQuizToAdd] = useState(
         {
             "id": uuidv4(),
@@ -89,10 +91,10 @@ const Dashboard = () => {
           }
     )
     let temp = [];
-    let toBeDeleted = []
-    let quizImage;
+    let toBeDeleted = [];
     let addquiz = [];
     let category = {};
+    let prog;
     useEffect(() => {
         const readData = async () => {
           let querySnapshot = await getDocs(collection(db, "quiz-data"));
@@ -105,7 +107,7 @@ const Dashboard = () => {
      
       readData();
 
-      }, [])
+      }, [myQuizzes])
     /*
     if(currentUser === null){
         return <Navigate from="/dashboard" to="/" />
@@ -120,21 +122,24 @@ const Dashboard = () => {
 
     const DeleteQuiz = async(myImgUrl) => {
         // using image as an ID
-        let image = myImgUrl;
+        let image = myQuizzes[0]["id"];
+        console.log(image);
+        
         // finsing the parent element since we have no way to know which parent or category
         const readData = async () => {
             let querySnapshot = await getDocs(collection(db, "quiz-data"));
             querySnapshot.forEach((doc) => {
-              doc.data().quizzes.map((el) => el.Image === image ? toBeDeleted.push(doc.data()) : '')
+              doc.data().quizzes.map((el) => el.id === image ? toBeDeleted.push(doc.data()) : '')
             })
         }
        
         // after we find the parent we pop it out of quizzes array and update that parent
         await readData().then(async() => {
-            toBeDeleted[0].quizzes = toBeDeleted[0].quizzes.filter((el) => el.Image !== image)
+            toBeDeleted[0].quizzes = toBeDeleted[0].quizzes.filter((el) => el.id !== image)
             
             const userDoc = doc(db, "quiz-data",toBeDeleted[0].name);
             const newFields =   toBeDeleted[0];
+            //console.log(toBeDeleted[0].name)
             await updateDoc(userDoc, newFields);
             
         })
@@ -207,8 +212,7 @@ const Dashboard = () => {
                     ({...el}))})
     }
     const onChangeImage = (e) => {
-        quizImage = e.target.files[0];
-        console.log(e.target.files[0])
+     setQuizToAddImage(e.target.files[0])
     }
     const validateQuizToAdd = () => {
         const isEmpty = Object.values(quizToAdd).every(x => x !== '');
@@ -239,7 +243,22 @@ const Dashboard = () => {
             window.scrollTo(0,0);
         }
     }
-
+    const validateImage = () => {
+        if(quizToAddImage === undefined || quizToAddImage.name === undefined || quizToAddImage.name === null){
+            console.log(quizToAddImage);
+            setErrors('Please add an image')
+            window.scrollTo(0,0);
+        }else{
+            return true;
+        }
+    }
+    const validateImageData = () => {
+        if(quizToAdd.Image === 'url'){
+            setErrors(`Image couldn't be uploaded`)
+        }else{
+            return true;
+        }
+    }
     const uploadNewQuiz = async() => {
         const docRef = doc(db, "quiz-data", quizToAdd.Category);
         const docSnap = await getDoc(docRef);
@@ -257,13 +276,13 @@ const Dashboard = () => {
     }
     const uploadImageToStorage = () => {
 
-        const sotrageRef = ref(storage, `files/${quizImage.name}`);
-        const uploadTask = uploadBytesResumable(sotrageRef, quizImage);
+        const sotrageRef = ref(storage, `files/${quizToAddImage.name+ new Date().getTime()}`);
+        const uploadTask = uploadBytesResumable(sotrageRef, quizToAddImage);
     
         uploadTask.on(
             "state_changed",
             (snapshot) => {
-              const prog = Math.round(
+              prog = Math.round(
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100
               );
              
@@ -272,19 +291,115 @@ const Dashboard = () => {
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                 setQuizToAdd({...quizToAdd, "Image": downloadURL})
-            
+                console.log(downloadURL)
               });
             }
           );
       };
       const addQuizToFirebase = () =>{
-        if(validateAnswers() && validateQuestions() && validateQuizToAdd()){
+        if(validateAnswers() && validateQuestions() && validateQuizToAdd() && validateImage()){
             setErrors('')
             uploadImageToStorage();
-            uploadNewQuiz();
+            if(validateImageData()){
+                uploadNewQuiz();
+            }
             
 
         }
+    }
+    const updateQuiz = (e) =>{
+        setUpdateQuizBool(true);
+        setAddQuizBool(true)
+        setQuizToAdd(myQuizzes.filter(el => el.id === e.target.dataset.id)[0])
+    }
+    const updateQuizToFirebase = async() => {
+        if(validateAnswers() && validateQuestions() && validateQuizToAdd()){
+            setErrors('')
+
+            const docRef = doc(db, "quiz-data", quizToAdd.Category);
+            const docSnap = await getDoc(docRef);
+    
+            if (docSnap.exists()) {
+                category = docSnap.data()
+                addquiz = [...docSnap.data().quizzes]
+                addquiz = addquiz.filter((el) => el.id !== quizToAdd.id)
+                addquiz.push(quizToAdd)
+                category = {...category, "quizzes": addquiz};
+                const userDoc = doc(db, "quiz-data",quizToAdd.Category);
+                const newFields = category;
+                await updateDoc(userDoc, newFields).then(() => {
+                    resetter()
+                    setAddQuizBool(false)
+                })
+            }
+            
+
+        }
+    }
+    const resetter = () => {
+        setAddQuizBool(false);
+        setUpdateQuizBool(false);
+        setQuizToAdd({
+            "id": uuidv4(),
+            "Image": "url",
+            "Category": "nature",
+             "Name": "",
+             "Difficulty": "Easy",
+             "Author": {
+                      "name" : currentUser === null ? ('') : (currentUser.displayName), 
+              },
+             "description": "",
+             "questions": [
+             {
+              "id": uuidv4(),
+              "Question": "",
+              "answer": "",
+              "Answers": [
+               {"answer": "", "isCorrect": true},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+              ]
+              
+             },
+                {
+              "id": uuidv4(),
+              "Question": "",
+              "answer": "",
+              "Answers": [
+               {"answer": "", "isCorrect": true},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+              ]
+              
+             },
+                {
+              "id": uuidv4(),
+              "Question": "",
+              "answer": "",
+              "Answers": [
+               {"answer": "", "isCorrect": true},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+              ]
+              
+             },
+                {
+              "id": uuidv4(),
+              "Question": "",
+              "answer": "",
+              "Answers": [
+               {"answer": "", "isCorrect": true},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+               {"answer": "", "isCorrect": false},
+              ]
+              
+             },
+             ]
+          })
     }
     return ( 
         <div className="dashboard">
@@ -297,7 +412,7 @@ const Dashboard = () => {
             )
             :
             (
-             <button className="action-btn btn-lightblue" onClick={() => setAddQuizBool(false)}>Main Menu</button>
+             <button className="action-btn btn-lightblue" onClick={resetter}>Main Menu</button>
             )
         }
         </div>
@@ -335,7 +450,7 @@ const Dashboard = () => {
                             <span className="authorName">{el.Author.name}</span>
                             </div>
                             <div className="btns">
-                            <button className='action-btn bg-red font-14 '>Update</button>
+                            <button className='action-btn bg-red font-14 ' data-id={el.id} onClick={updateQuiz}>Update</button>
                             <button className='action-btn bg-gray font-14' data-image={el.Image} onClick={(e) => {setImageUrl(e.target.dataset.image); handleShow()}}>Delete</button>
                             </div>
                             </div>
@@ -386,6 +501,22 @@ const Dashboard = () => {
                 {
                     [quizToAdd].map(el => (
                         <form>
+                            {
+                            updateQuizBool !== true ?
+                            (
+                                <div className="card margin-bottom30">
+                                    <div className="card-body">
+                                        <h3 className='margin-bottom15'>Instructions</h3>
+                                        <ul>
+                                            <li>Once you add the quiz you can't update or change the image</li>
+                                            <li>Once you add the quiz you can't update ot change the category (nature, Arts, Sport, etc...)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            )
+                            :
+                                ''
+                            }
                         <div className="row">
                             {/**QUIZ NAME */}
                             <div className="col">
@@ -398,22 +529,29 @@ const Dashboard = () => {
                                  />
                             </div>
                             {/**CATEGORY  */}
-                            <div className="col">
-                                <select 
-                                  className="form-control" 
-                                  style={{"appearance": "auto", "height": "37.6px"}}
-                                  onChange={onChangeQuizType}
-                                  >
-                                    <option>nature</option>
-                                    <option>Technology</option>
-                                    <option>History</option>
-                                    <option>Geography</option>
-                                    <option>Arts</option>
-                                    <option>Movies</option>
-                                    <option>Software Development</option>
-                                    <option>Sport</option>
-                                </select>
-                            </div>
+                            {
+                                updateQuizBool !== true ?
+                                (
+                                    <div className="col">
+                                    <select 
+                                      className="form-control" 
+                                      style={{"appearance": "auto", "height": "37.6px"}}
+                                      onChange={onChangeQuizType}
+                                      >
+                                        <option>nature</option>
+                                        <option>Technology</option>
+                                        <option>History</option>
+                                        <option>Geography</option>
+                                        <option>Arts</option>
+                                        <option>Movies</option>
+                                        <option>Software Development</option>
+                                        <option>Sport</option>
+                                    </select>
+                                </div>
+                                )
+                                :
+                                ('')
+                            }
                             {/**DIFFECULTIY OF QUIZ */}
                             <div className="col">
                                 <select 
@@ -428,14 +566,21 @@ const Dashboard = () => {
                             </div>
                         </div>
                         {/**CHOOSE IMAGE FILE FOR QUIZ IMAGE */}
-                        <div className="row upload-image">
-                            <input 
-                             type="file" 
-                             className="custom-file-input" 
-                             id="customFile" 
-                             onChange={onChangeImage}/>
-                            <label className="custom-file-label" for="customFile">Choose file</label>
-                        </div>
+                        {
+                            updateQuizBool !== true ?
+                            (
+                                <div className="row upload-image">
+                                <input 
+                                 type="file" 
+                                 className="custom-file-input" 
+                                 id="customFile" 
+                                 onChange={onChangeImage}/>
+                                <label className="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            )
+                            :
+                            ('')
+                        }
                         {/**TEXT AREA */}
                         <div className="row upload-image">
                             <textarea 
@@ -528,9 +673,20 @@ const Dashboard = () => {
                                 <div className="addQuestion-BTN">
                                     <button type="button" className="btn btn-primary" onClick={addQuizHandler}>Add Questions</button>
                                 </div>
-                                <div className="Submit-BTN">
-                                    <button type="button" className="btn btn-success" onClick={addQuizToFirebase}>Submit</button>
-                                </div>
+                                {
+                                    updateQuizBool !== true ?
+                                    (
+                                    <div className="Submit-BTN">
+                                        <button type="button" className="btn btn-success" onClick={addQuizToFirebase}>Submit</button>
+                                    </div>
+                                    )
+                                    :
+                                    (
+                                    <div className="Submit-BTN">
+                                        <button type="button" className="btn btn-danger" onClick={updateQuizToFirebase}>Update</button>
+                                    </div>
+                                    )
+                                }
                             </div>
                         </form>
                     ))
