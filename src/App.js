@@ -72,6 +72,13 @@ function App() {
          </>
          } 
         />
+        <Route path="/quiz-app" element={
+          <>
+         <Search setSortTypes={setSortTypes}/>
+         <Types sortTypes={sortTypes}/>
+         </>
+         } 
+        />
         {/**LIST THE ROUTES: LOGIN, LIST TYPES, QUIZ*/}
         <Route path="/quizzes/:category" element={
         <>
