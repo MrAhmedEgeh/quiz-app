@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import './Styles/app.scss';
 import './Styles/loader.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 
 import Nav from "./Components/Nav";
@@ -22,20 +22,16 @@ import { AuthProvider } from "./context/AuthContext"
 import {
   collection,
   getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
 } from "firebase/firestore";
 import data from "./data";
-import {db, updateCategories} from './Firebase/FirebaseConfig'
+import {db} from './Firebase/FirebaseConfig'
 function App() {
   const [sortTypes, setSortTypes] = useState("All"); // for searching the types of quizzes which can be found in Types.js
   const [quizName, SetQuizName] = useState('');
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [question, setQuestion] = useState({});
   const [loading, setLoading] = useState(true);
-  let bool = false;
+ 
   useEffect(() => {
     const readData = async () => {
       let querySnapshot = await getDocs(collection(db, "quiz-data"));

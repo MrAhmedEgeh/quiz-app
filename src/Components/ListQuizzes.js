@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { NavLink, useParams, Navigate} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import { NavLink, useParams} from 'react-router-dom';
 import data from "../data";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faUserCircle} from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
         setCurrentQuestions([]);
         setQuestion({});
         SetQuizName('')
-    }, [])
+    }, [setCurrentQuestions, setQuestion, SetQuizName])
 
     const idLogger = (parentId, quizId) => {
 

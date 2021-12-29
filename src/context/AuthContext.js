@@ -23,10 +23,10 @@ export function AuthProvider({ children }) {
     function logout() {
       return auth.signOut()
     }
-  
+  /*
     function resetPassword(email) {
       return auth.sendPasswordResetEmail(email)
-    }
+    }*/
     function updateDisplayName(name) {
       return updateProfile(auth.currentUser, {
         displayName: name

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import Logo from '../Assets/website-logo.png';
 import { useAuth } from "../context/AuthContext"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faUserCircle, faSignOutAlt, faAddressBook} from '@fortawesome/free-solid-svg-icons';
+import {faUserCircle, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 const Nav = () => {
     const {currentUser, logout} = useAuth()
     const [showMenu, setShowMenu] = useState(false);
@@ -63,8 +63,3 @@ const Nav = () => {
 export default Nav;
 
 
-/*
-let name = "Ahmed Egeh"
-
-console.log("Hi "+name.split(' ')[0]+'!')
-*/

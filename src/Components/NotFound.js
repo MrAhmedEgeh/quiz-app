@@ -1,5 +1,4 @@
 import React from 'react';
-import NotFoundImage from '../Assets/library.jpg';
 import { NavLink } from "react-router-dom";
 const NotFound = () => {
     return(

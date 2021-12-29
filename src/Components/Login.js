@@ -6,7 +6,6 @@ const Login = () => {
     // useRefs
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
-    const checkboxRef = useRef(null);
     const navigate = useNavigate()
     const { login, currentUser } = useAuth()
 

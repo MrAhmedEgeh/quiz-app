@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { NavLink, useNavigate, Navigate  } from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import { useAuth } from "../context/AuthContext"
 
 
@@ -10,7 +10,7 @@ const Register = () => {
     const passwordRef1 = useRef(null);
     const passwordRef2 = useRef(null);
     const navigate = useNavigate()
-    const { signup, updateDisplayName, currentUser } = useAuth()
+    const { signup, updateDisplayName} = useAuth()
     // useStates
     const [errorMessage, SetErrorMessage] = useState('');
     // Handlers
@@ -110,10 +110,3 @@ const Register = () => {
 
 export default Register;
 
-
-/*
-emailRef.current.value !== '' && nameRef.current.value !== ''
-            && passwordRef1.current.value === passwordRef2.current.value){
-                SetErrorMessage('')
-              console.log(nameRef.current.value
-                */

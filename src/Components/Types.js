@@ -1,6 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import data from "../data";
 import { NavLink } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const Types = ({sortTypes}) => {
     return(
@@ -8,7 +9,7 @@ const Types = ({sortTypes}) => {
             {data.map((type) => 
               type.name.toUpperCase().match(sortTypes.toUpperCase()) ||  sortTypes === 'All'?
               (
-                <NavLink to={`/quizzes/${type.name}`} className="NavLink">
+                <NavLink to={`/quizzes/${type.name}`} className="NavLink" key={uuidv4()}>
                     <div className="types" key={type.id}>
                       <div className="overlay"></div>
                       <img id={type.id} src={type.image} alt={type.text}/>
