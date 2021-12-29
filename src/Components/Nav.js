@@ -17,7 +17,7 @@ const Nav = () => {
                 currentUser === null || currentUser === undefined?
                 (
                     <NavLink to="/login">
-                    <button>Login | Register</button>
+                    <button className='login-btn'>Login | Register</button>
                     </NavLink>
                 )
                 :

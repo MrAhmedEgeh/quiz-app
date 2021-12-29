@@ -11,7 +11,9 @@
     justify-content: space-between;
     .NavLinkNav {
       text-decoration: none;
-      height: 58px;
+      max-height: 58px;
+      height: 100%;
+      max-width: 65px;
       transform: scale(2);
       margin-top: 10px;
     }
@@ -78,6 +80,19 @@
     }
     .dashboard {
       padding-left: 16px;
+    }
+  }
+  // Small devices (landscape phones, 576px and up)
+  @media (max-width: 576px) {
+    .login-btn {
+      padding: 5px 10px !important;
+    }
+  }
+
+  // Medium devices (tablets, 768px and up)
+  @media (min-width: 768px) {
+    .login-btn {
+      padding: 5px 10px !important;
     }
   }
 }

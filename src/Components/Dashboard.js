@@ -423,7 +423,7 @@ const Dashboard = () => {
             addQuizBool === false ?
              myQuizzes.length === 0 ?
              (
-                <div style={{margin: '30px 30%', fontSize: '25px'}}>You don't have quizzes yet, you can add them! &#128513;</div>
+                <div style={{margin: '30px 28%', fontSize: '25px'}}>You don't have quizzes yet, you can add them! &#128513;</div>
              )
              :
              (
