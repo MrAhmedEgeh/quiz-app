@@ -23,15 +23,20 @@
   }
 
   .content {
-    margin-left: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding: 10px;
-    min-width: 600px;
-    width: 600px;
+    max-width: 600px;
+    width: 100%;
     h5 {
       color: #777;
+    }
+    .quiztitle {
+      h2,
+      h5 {
+        overflow: hidden;
+      }
     }
     .secondRow {
       margin-top: 15px;
@@ -41,11 +46,6 @@
       .bold {
         font-weight: bold;
       }
-    }
-    p {
-      max-width: 630px;
-      padding-bottom: 10px;
-      width: 500px;
     }
     .author {
       display: flex;
@@ -66,13 +66,12 @@
         margin-left: 10px;
       }
       .takequiz {
-        padding: 10px 20px;
+        padding: 5px 10px;
         outline: 0;
         border: 0;
         background-color: #448570;
         color: #fff;
         border-radius: 10px;
-        margin-right: 20px;
         &:hover {
           cursor: pointer;
         }
@@ -84,6 +83,7 @@
 @media (max-width: 767px) {
   .quiz {
     flex-direction: column;
+    width: 60%;
     .imageContainer {
       width: 90%;
       margin-top: 10px;
