@@ -97,6 +97,7 @@ const Dashboard = () => {
     let prog;
     useEffect(() => {
         const readData = async () => {
+            if(currentUser === null || currentUser === undefined) return;
           let querySnapshot = await getDocs(collection(db, "quiz-data"));
           querySnapshot.forEach((doc) => {
             doc.data().quizzes.map((el) => el.Author.name === currentUser.displayName ? temp.push(el) : '')
@@ -108,11 +109,8 @@ const Dashboard = () => {
       readData();
 
       }, [myQuizzes])
-    /*
-    if(currentUser === null){
-        return <Navigate from="/dashboard" to="/" />
-     }*/
-     // HANDLERS
+    
+
      const handleClose = () => {
          setShow(false)
          setImageUrl('')
@@ -120,22 +118,19 @@ const Dashboard = () => {
      const handleShow = () => setShow(true);
 
 
-    const DeleteQuiz = async(myImgUrl) => {
-        // using image as an ID
-        let image = myQuizzes[0]["id"];
-        console.log(image);
-        
+    const DeleteQuiz = async(id) => {
+        console.log(id)
         // finsing the parent element since we have no way to know which parent or category
         const readData = async () => {
             let querySnapshot = await getDocs(collection(db, "quiz-data"));
             querySnapshot.forEach((doc) => {
-              doc.data().quizzes.map((el) => el.id === image ? toBeDeleted.push(doc.data()) : '')
+              doc.data().quizzes.map((el) => el.id === id ? toBeDeleted.push(doc.data()) : '')
             })
         }
        
         // after we find the parent we pop it out of quizzes array and update that parent
         await readData().then(async() => {
-            toBeDeleted[0].quizzes = toBeDeleted[0].quizzes.filter((el) => el.id !== image)
+            toBeDeleted[0].quizzes = toBeDeleted[0].quizzes.filter((el) => el.id !== id)
             
             const userDoc = doc(db, "quiz-data",toBeDeleted[0].name);
             const newFields =   toBeDeleted[0];
@@ -327,7 +322,9 @@ const Dashboard = () => {
                 category = {...category, "quizzes": addquiz};
                 const userDoc = doc(db, "quiz-data",quizToAdd.Category);
                 const newFields = category;
-                await updateDoc(userDoc, newFields).then(() => {
+                await updateDoc(userDoc, newFields)
+                .catch((error) => console.log(error))
+                .then(() => {
                     resetter()
                     setAddQuizBool(false)
                 })
@@ -401,6 +398,9 @@ const Dashboard = () => {
              ]
           })
     }
+    if(currentUser === null){
+        return <Navigate from="/dashboard" to="/" />
+     }
     return ( 
         <div className="dashboard">
         <div className="firstline">
@@ -451,7 +451,7 @@ const Dashboard = () => {
                             </div>
                             <div className="btns">
                             <button className='action-btn bg-red font-14 ' data-id={el.id} onClick={updateQuiz}>Update</button>
-                            <button className='action-btn bg-gray font-14' data-image={el.Image} onClick={(e) => {setImageUrl(e.target.dataset.image); handleShow()}}>Delete</button>
+                            <button className='action-btn bg-gray font-14' data-id={el.id} onClick={(e) => {setImageUrl(e.target.dataset.id); handleShow()}}>Delete</button>
                             </div>
                             </div>
                             </div>
@@ -537,6 +537,7 @@ const Dashboard = () => {
                                       className="form-control" 
                                       style={{"appearance": "auto", "height": "37.6px"}}
                                       onChange={onChangeQuizType}
+                                      value={quizToAdd.Category}
                                       >
                                         <option>nature</option>
                                         <option>Technology</option>
@@ -558,6 +559,7 @@ const Dashboard = () => {
                                  className="form-control" 
                                  style={{"appearance": "auto", "height": "37.6px"}}
                                  onChange={onChangeQuizDiffeculty}
+                                 value={quizToAdd.Difficulty}
                                  >
                                     <option>Easy</option>
                                     <option>Moderate</option>

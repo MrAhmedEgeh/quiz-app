@@ -76,6 +76,11 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
                         </div>
                     </div> 
                     :
+                   element.quizzes.length === 0 ?
+                   (
+                    <div className="">No quizzes have been added yet! &#128513;</div>
+                   )
+                   :
                    ''
                 ))
                 :

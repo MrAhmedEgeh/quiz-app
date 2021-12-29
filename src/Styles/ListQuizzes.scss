@@ -28,6 +28,8 @@
     flex-direction: column;
     justify-content: space-around;
     padding: 10px;
+    min-width: 600px;
+    width: auto;
     h5 {
       color: #777;
     }
@@ -43,7 +45,7 @@
     p {
       max-width: 630px;
       padding-bottom: 10px;
-      width: 400px;
+      width: 500px;
     }
     .author {
       display: flex;
