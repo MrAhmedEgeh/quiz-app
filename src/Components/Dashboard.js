@@ -423,8 +423,13 @@ const Dashboard = () => {
             )
             :
             addQuizBool === false ?
-            (
-            <div className="dashboard-quizzes">
+             myQuizzes.length === 0 ?
+             (
+                <div style={{margin: '30px 30%', fontSize: '25px'}}>You don't have quizzes yet, you can add them! &#128513;</div>
+             )
+             :
+             (
+                <div className="dashboard-quizzes">
                 {
                 <div className="quiz-container margin-top60">
                     {
@@ -483,7 +488,7 @@ const Dashboard = () => {
                 </Modal.Footer>
                 </Modal>
             </div>
-            )
+             )
             :
             addQuizBool === true ?
             (

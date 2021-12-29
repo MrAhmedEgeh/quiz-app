@@ -39,53 +39,54 @@ const ListQuizzes = ({sortTypes, setCurrentQuestions, setQuestion, SetQuizName})
         <div className="quiz-container">
             {data.map((element, i) => (
               element.name === category ?
-                element.quizzes.map(quiz => (
-                    quiz.Name.toUpperCase().match(sortTypes.toUpperCase()) ||  sortTypes === 'All'?
-                    <div key={i} className="quiz">
-                        <div className="imageContainer">
-                            <img src={quiz.Image} alt={''} />
-                        </div>
-                        <div className="content">
-                        {/**QUIZ TYPE AND QUIZ TITLE */}
-                        <div className="quiztitle">
-                        <h5>{element.name}</h5>
-                        <h2>{quiz.Name}</h2>
-                        {/**QUIZ PROPERTIES, LENGHT AND NUMBER OF QUIZZES */}
-                        <div className="secondRow">
-                        <span className="length"><span className="bold">Questions:</span> {quiz.questions.length}</span>
-                        
-                        <span className="diff"><span className="bold">Difficulty:</span> {quiz.Difficulty}</span>
-                        </div>
-                        </div>
-                        <p>{quiz.description}</p>
-                        {/**AUTHOR DETAILS */}
-                        <div className="author">
-                        <div className="con">
-                            {/*}
-                        <img className="authorImage" src={quiz.Author.image} alt="author image" />
-                {*/}
-                <FontAwesomeIcon className="skip-back" style={{color: '#448570'}} size="2x" icon={faUserCircle}/>
-                        <span className="authorName">{quiz.Author.name}</span>
-                        </div>
-                       
-                        <NavLink to='/quiz'>
-                        <button className="takequiz" onClick={() => idLogger(element.id, quiz.id)}>Take Quiz</button>
-                        </NavLink>
-         
-                        </div>
-                        </div>
-                    </div> 
-                    :
-                   element.quizzes.length === 0 ?
-                   (
-                    <div className="">No quizzes have been added yet! &#128513;</div>
-                   )
-                   :
-                   ''
-                ))
+                element.quizzes.length === 0 ?
+                (
+                  <div style={{marginTop: '30px', fontSize: '25px'}}>No Quizzes have been added yet! &#128513;</div>
+                )
                 :
-                ''
-            ))}
+                element.quizzes.map(quiz => (
+                  quiz.Name.toUpperCase().match(sortTypes.toUpperCase()) ||  sortTypes === 'All'?
+                  <div key={i} className="quiz">
+                      <div className="imageContainer">
+                          <img src={quiz.Image} alt={''} />
+                      </div>
+                      <div className="content">
+                      {/**QUIZ TYPE AND QUIZ TITLE */}
+                      <div className="quiztitle">
+                      <h5>{element.name}</h5>
+                      <h2>{quiz.Name}</h2>
+                      {/**QUIZ PROPERTIES, LENGHT AND NUMBER OF QUIZZES */}
+                      <div className="secondRow">
+                      <span className="length"><span className="bold">Questions:</span> {quiz.questions.length}</span>
+                      
+                      <span className="diff"><span className="bold">Difficulty:</span> {quiz.Difficulty}</span>
+                      </div>
+                      </div>
+                      <p>{quiz.description}</p>
+                      {/**AUTHOR DETAILS */}
+                      <div className="author">
+                      <div className="con">
+                          {/*}
+                      <img className="authorImage" src={quiz.Author.image} alt="author image" />
+              {*/}
+              <FontAwesomeIcon className="skip-back" style={{color: '#448570'}} size="2x" icon={faUserCircle}/>
+                      <span className="authorName">{quiz.Author.name}</span>
+                      </div>
+                     
+                      <NavLink to='/quiz'>
+                      <button className="takequiz" onClick={() => idLogger(element.id, quiz.id)}>Take Quiz</button>
+                      </NavLink>
+       
+                      </div>
+                      </div>
+                  </div> 
+                 :
+                 ''
+              ))
+              :
+              ''
+          )
+            )}
         </div>
     );
 }
